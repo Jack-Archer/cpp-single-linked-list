@@ -149,12 +149,12 @@ public:
 	
 	template <typename Container>
 	void Init (Container& container) {
-	    SingleLinkedList temp;
-	    auto t = temp.before_begin();
-        for (auto& item : container) {
-            t = temp.InsertAfter(t, item);
-        }
-        swap(temp);
+		SingleLinkedList temp;
+		auto t = temp.before_begin();
+		for (auto& item : container) {
+		    t = temp.InsertAfter(t, item);
+		}
+		swap(temp);
 	}
 
 	SingleLinkedList& operator=(const SingleLinkedList& rhs) {
