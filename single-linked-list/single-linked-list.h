@@ -51,7 +51,7 @@ class SingleLinkedList {
 		}
 
 		[[nodiscard]] bool operator!=(const BasicIterator<const Type>& rhs) const noexcept {
-			return node_ != rhs.node_;
+			return !(node_ == rhs.node_);
 		}
 
 		[[nodiscard]] bool operator==(const BasicIterator<Type>& rhs) const noexcept {
@@ -59,7 +59,7 @@ class SingleLinkedList {
 		}
 
 		[[nodiscard]] bool operator!=(const BasicIterator<Type>& rhs) const noexcept {
-			return node_ != rhs.node_;
+			return !(node_ == rhs.node_);
 		}
 
 		BasicIterator& operator++() noexcept {
@@ -115,11 +115,11 @@ public:
 	}
 
 	[[nodiscard]] ConstIterator cbegin() const noexcept {
-		return ConstIterator{ head_.next_node };
+		return begin();
 	}
 
 	[[nodiscard]] ConstIterator cend() const noexcept {
-		return ConstIterator(nullptr);
+		return end();
 	}
 
 	[[nodiscard]] Iterator before_begin() noexcept {
@@ -140,18 +140,21 @@ public:
 		, size_(0) {
 	}
 	SingleLinkedList(std::initializer_list<Type> values) :head_(), size_(0) {
-		for (auto it = rbegin(values); it != rend(values); ++it) {
-			this->PushFront(*it);
-		}
+		Init(values);
 	}
 
 	SingleLinkedList(const SingleLinkedList& other) :head_(), size_(0) {
-		SingleLinkedList temp;
-		auto t = temp.before_begin();
-		for (auto& item : other) {
-			t = temp.InsertAfter(t, item);
-		}
-		swap(temp);
+		Init(other);
+	}
+	
+	template <typename Container>
+	void Init (Container& container) {
+	    SingleLinkedList temp;
+	    auto t = temp.before_begin();
+        for (auto& item : container) {
+            t = temp.InsertAfter(t, item);
+        }
+        swap(temp);
 	}
 
 	SingleLinkedList& operator=(const SingleLinkedList& rhs) {
@@ -173,11 +176,9 @@ public:
 	}
 
 	[[nodiscard]] bool IsEmpty() const noexcept {
-		if (head_.next_node == nullptr) {
-			return true;
-		}
-		else { return false; }
+		return head_.next_node == nullptr;
 	}
+	
 	void PushFront(const Type& value) {
 		head_.next_node = new Node(value, head_.next_node);
 		++size_;
@@ -198,12 +199,12 @@ public:
 	}
 
 	void PopFront() noexcept {
-		if (head_.next_node != nullptr) {
-			Node* before_node = head_.next_node;
-			head_.next_node = before_node->next_node;
-			--size_;
-			delete before_node;
-		}
+		assert(head_.next_node == nullptr);
+        Node* before_node = head_.next_node;
+        head_.next_node = before_node->next_node;
+        --size_;
+        delete before_node;
+
 	}
 
 	Iterator EraseAfter(ConstIterator pos) noexcept {
@@ -261,14 +262,10 @@ void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
 
 template <typename Type>
 bool operator==(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-	if (lhs.GetSize() == rhs.GetSize()) {
 		return std::equal(lhs.begin(), lhs.end(), rhs.begin());
-	}
-	return false;
 }
 
 template <typename Type>
 bool operator!=(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
 	return !(lhs == rhs);
 }
-
