@@ -146,15 +146,15 @@ public:
 	SingleLinkedList(const SingleLinkedList& other) :head_(), size_(0) {
 		Init(other);
 	}
-	
+
 	template <typename Container>
 	void Init (Container& container) {
-		SingleLinkedList temp;
-		auto t = temp.before_begin();
-		for (auto& item : container) {
-		    t = temp.InsertAfter(t, item);
-		}
-		swap(temp);
+	    SingleLinkedList temp;
+	    auto t = temp.before_begin();
+        for (auto& item : container) {
+            t = temp.InsertAfter(t, item);
+        }
+        swap(temp);
 	}
 
 	SingleLinkedList& operator=(const SingleLinkedList& rhs) {
@@ -178,7 +178,7 @@ public:
 	[[nodiscard]] bool IsEmpty() const noexcept {
 		return head_.next_node == nullptr;
 	}
-	
+
 	void PushFront(const Type& value) {
 		head_.next_node = new Node(value, head_.next_node);
 		++size_;
@@ -260,9 +260,14 @@ void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
 	lhs.swap(rhs);
 }
 
+
 template <typename Type>
 bool operator==(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
+    if (lhs.begin() == rhs.begin()) return true;
+	if (lhs.GetSize() == rhs.GetSize()) {
 		return std::equal(lhs.begin(), lhs.end(), rhs.begin());
+	}
+	return false;
 }
 
 template <typename Type>
