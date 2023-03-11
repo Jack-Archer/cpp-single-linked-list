@@ -263,7 +263,9 @@ void swap(SingleLinkedList<Type>& lhs, SingleLinkedList<Type>& rhs) noexcept {
 
 template <typename Type>
 bool operator==(const SingleLinkedList<Type>& lhs, const SingleLinkedList<Type>& rhs) {
-    if (lhs.begin() == rhs.begin()) return true;
+    if (lhs.begin() == rhs.begin()) {
+    	return true;
+    }
 	if (lhs.GetSize() == rhs.GetSize()) {
 		return std::equal(lhs.begin(), lhs.end(), rhs.begin());
 	}
